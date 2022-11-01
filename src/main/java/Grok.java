@@ -21,6 +21,8 @@ public class Grok
     public Grok()
     {
         setPowerLevel(DEFAULT_POWER_LEVEL);
+        isAlive = true;
+        isDead();
     }
 
     /*
@@ -31,6 +33,8 @@ public class Grok
     public Grok(int powerLevel)
     {
         setPowerLevel(powerLevel);
+        isAlive = true;
+        isDead();
     }
 
     // accessor methods
@@ -41,12 +45,19 @@ public class Grok
      */
     public int getPowerLevel()
     {
-        return powerLevel;
+       return powerLevel;
     }
 
     public boolean isDead()
     {
         // TODO: replace this line with your code here
+
+        if(getPowerLevel() <= 0){
+            isAlive = false;
+            return true;
+        }else {
+            return false;
+        }
     }
 
     // mutator methods
@@ -57,7 +68,15 @@ public class Grok
      */
     public void setPowerLevel(int powerLevel)
     {
-        this.powerLevel = powerLevel;
+        if(powerLevel >= MAX_POWER_LEVEL) {
+            this.powerLevel = MAX_POWER_LEVEL;
+        }else if(powerLevel <= 0) {
+            this.powerLevel = 0;
+            isAlive = false;
+            isDead();
+        }else {
+            this.powerLevel = powerLevel;
+        }
     }
 
     /*
@@ -68,16 +87,29 @@ public class Grok
      */
     public void takePowerPill(PowerPill pill)
     {
-        setPowerLevel(powerLevel + pill.getPower());
+        if((getPowerLevel() <= 0) || ((getPowerLevel() + pill.getPower()) <= 0)) {
+            setPowerLevel(0);
+            isAlive = false;
+            isDead();
+        }else if((getPowerLevel() + pill.getPower())  >= MAX_POWER_LEVEL) {
+            setPowerLevel(MAX_POWER_LEVEL);
+        }else {
+            setPowerLevel(getPowerLevel() + pill.getPower());
+        }
     }
 
     /*
      * Invoked when this Grok takes a hit.  The power level of
      * this Grok is reduced by 5.
      */
-    public void tookHit()
-    {
-        setPowerLevel(powerLevel - 5);
+    public void tookHit() {
+        if ((getPowerLevel() - 5) <= 0) {
+            setPowerLevel(0);
+            isAlive = false;
+            isDead();
+        }else {
+            setPowerLevel(getPowerLevel() - 5);
+        }
     }
 
     //================== Do Not Touch Code Below this line =============================
